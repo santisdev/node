@@ -1,6 +1,5 @@
 const http = require("http");
 const fs = require("fs");
-const { parse } = require("path");
 
 // function rqListener(req, res) {}
 
@@ -30,10 +29,11 @@ const server = http.createServer((req, res) => {
       //To be run in the future, does not pause the execution
       const parsedBody = Buffer.concat(body).toString();
       const message = parsedBody.split("=")[1];
-      fs.writeFileSync("message.txt", message);
+      fs.writeFile("message.txt", message, (err) => {
+        res.writeHead(302, { Location: "/" });
+        return res.end();
+      });
     });
-    res.writeHead(302, { Location: "/" });
-    return res.end();
   }
 });
 
