@@ -7,6 +7,7 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getAddProducts = (req, res, next) => {
-  const products = Product.fetchAll();
-  console.log(products);
+  Product.fetchAll((products) => {
+    res.send(products);
+  });
 };
