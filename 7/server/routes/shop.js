@@ -7,10 +7,14 @@ const router = express.Router();
 
 router.get("/", shopController.getProducts);
 
-router.get("/products");
+router.get("/products", shopController.getProducts);
 
-router.get("/cart");
+router.get("/products/:productId", shopController.getProduct);
 
-router.get("/checkout");
+router.get("/cart", shopController.getCart);
+
+router.get("/orders", shopController.getOrders);
+
+router.get("/checkout", shopController.getCheckout);
 
 module.exports = router;
