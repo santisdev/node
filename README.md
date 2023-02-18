@@ -16,8 +16,9 @@ localhost:3000/cart
 body:
 ````json
 {
-"productId":"product Id"
-}```
+    "productId":"product Id"
+}
+```
 
 # GET
 
