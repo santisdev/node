@@ -44,8 +44,10 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.id;
-  Product.deleteById(prodId);
+  const prodId = req.body.productId;
+  Product.findById(prodId, (product) => {
+    Product.deleteById(prodId, product.price);
+  });
   return res.json("Product deleted");
 };
 
