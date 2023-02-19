@@ -43,6 +43,12 @@ exports.postEditProduct = (req, res, next) => {
   updatedProduct.save();
 };
 
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.id;
+  Product.deleteById(prodId);
+  return res.json("Product deleted");
+};
+
 exports.getAddProducts = (req, res, next) => {
   Product.fetchAll((products) => {
     res.send(products);
