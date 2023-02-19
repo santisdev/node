@@ -20,7 +20,22 @@ body:
 }
 ```
 
+localhost:3000/admin/edit-product
+```json{
+    "id": "id",
+    "title": "book1",
+    "imageUrl": "https>//image.url",
+    "description": "This a new book edited",
+    "price": "800"
+}```
+
+localhost:3000/admin/delete-product
+```json{
+    "id": "id"
+}```
+
 # GET
 
 localhost:3000/products/prodId
+localhost:3000/admin/edit-product/prodID
 `````

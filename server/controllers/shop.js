@@ -14,7 +14,30 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
-exports.getCart = (req, res, next) => {};
+exports.getCart = (req, res, next) => {
+  const cartProducts = [];
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      for (product of products) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
+        }
+      }
+      return res.json(cartProducts);
+    });
+  });
+};
+
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findById(prodId, (product) => {
+    Cart.DeleteProduct(prodId, product.price);
+    return res.json(product);
+  });
+};
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
