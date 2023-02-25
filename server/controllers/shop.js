@@ -1,10 +1,9 @@
 const Cart = require("../models/cart");
 const Product = require("../models/product");
 
-exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.send(products);
-  });
+exports.getProducts = async (req, res, next) => {
+  const { rows } = await Product.fetchAll();
+  return res.json(rows);
 };
 
 exports.getProduct = (req, res, next) => {
