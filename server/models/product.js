@@ -10,7 +10,12 @@ module.exports = class Product {
     this.price = price;
   }
 
-  save() {}
+  save() {
+    return db.query(
+      "INSERT INTO ecommerce.products (title, price, description, image_url) VALUES ($1, $2, $3, $4) RETURNING *",
+      [this.title, this.price, this.description, this.imageUrl]
+    );
+  }
 
   static deleteById(id) {}
 

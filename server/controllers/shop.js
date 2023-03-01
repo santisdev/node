@@ -2,8 +2,12 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 exports.getProducts = async (req, res, next) => {
-  const { rows } = await Product.fetchAll();
-  return res.json(rows);
+  try {
+    const { rows } = await Product.fetchAll();
+    return res.json(rows);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.getProduct = (req, res, next) => {
