@@ -10,11 +10,14 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
-exports.getProduct = (req, res, next) => {
+exports.getProduct = async (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, (product) => {
-    res.json(product);
-  });
+  try {
+    const { rows } = await Product.findById(prodId);
+    return res.json(rows);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.getCart = (req, res, next) => {

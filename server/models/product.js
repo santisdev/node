@@ -24,5 +24,10 @@ module.exports = class Product {
     return db.query("SELECT * FROM ecommerce.products");
   }
 
-  static findById(id, cb) {}
+  static findById(id) {
+    return db.query(
+      "SELECT * FROM ecommerce.products AS products WHERE products.id = $1",
+      [id]
+    );
+  }
 };
