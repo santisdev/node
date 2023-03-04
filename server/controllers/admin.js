@@ -5,13 +5,13 @@ exports.postAddProduct = async (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
   const price = req.body.price;
-  try {
-    const product = new Product(null, title, imageUrl, description, price);
-    const { rows } = await product.save();
-    return res.json(rows[0]);
-  } catch (err) {
-    console.log(err);
-  }
+  const product = await Product.create({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  });
+  return res.json(product);
 };
 
 exports.getEditProduct = (req, res, netx) => {
