@@ -3,8 +3,8 @@ const Product = require("../models/product");
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const { rows } = await Product.fetchAll();
-    return res.json(rows);
+    const products = await Product.findAll();
+    return res.json(products);
   } catch (err) {
     console.log(err);
   }
@@ -13,8 +13,10 @@ exports.getProducts = async (req, res, next) => {
 exports.getProduct = async (req, res, next) => {
   const prodId = req.params.productId;
   try {
-    const { rows } = await Product.findById(prodId);
-    return res.json(rows);
+    const product = await Product.findByPk(prodId);
+    return res.json(product);
+    // const products = await Product.findAll({ where: { id: prodId } });
+    // return res.json(products[0]);
   } catch (err) {
     console.log(err);
   }
