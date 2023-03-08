@@ -6,12 +6,18 @@ exports.postAddProduct = async (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
     const price = req.body.price;
-    const product = await Product.create({
+    const product = await req.user.createProduct({
       title: title,
       price: price,
       imageUrl: imageUrl,
       description: description,
     });
+    // const product = await Product.create({
+    //   title: title,
+    //   price: price,
+    //   imageUrl: imageUrl,
+    //   description: description,
+    // });
     return res.json(product);
   } catch (err) {
     console.log(err);
@@ -26,14 +32,15 @@ exports.getEditProduct = async (req, res, netx) => {
     // }
     const prodId = req.params.productId;
 
-    const products = await Product.findByPk(prodId);
-    if (!products) {
+    // const products = await Product.findByPk(prodId);
+    const product = await req.user.getProducts({ where: { id: prodId } });
+    if (!product) {
       res.status(404);
       return res.json({
         error: "Product not found",
       });
     } else {
-      return res.json(products);
+      return res.json(product);
     }
   } catch (err) {
     console.log(err);

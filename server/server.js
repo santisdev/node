@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const express = require("express");
 
 const sequelize = require("./util/database");
+const Product = require("./models/product");
+const User = require("./models/user");
 
 const app = express();
 
@@ -14,14 +16,31 @@ const errorController = require("./controllers/error");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(async (req, res, next) => {
+  try {
+    const user = await User.findByPk(1);
+    if (user) {
+      req.user = user;
+      next();
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 sequelize
   .sync()
+  // .sync({ force: true })
   .then((result) => {
-    console.log("Tables created successfully! ");
+    User.create({ name: "Dummy", email: "email@email.com" });
+    console.log("Tables created successfully!! ");
     app.listen(3000);
   })
   .catch((error) => {
