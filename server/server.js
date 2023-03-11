@@ -35,12 +35,11 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-User.hasMany(Product);
+User.hasMany(Product); //foreign key on Product
 User.hasOne(Cart);
 Cart.belongsTo(User);
-Cart.belongsToMany(Product);
-Product.belongsToMany(Cart);
-Cart.hasMany(CartItem);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
   .sync()
