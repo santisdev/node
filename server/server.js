@@ -44,8 +44,9 @@ Product.belongsToMany(Cart, { through: CartItem });
 sequelize
   .sync()
   // .sync({ force: true })
-  .then((result) => {
-    User.create({ name: "Dummy", email: "email@email.com" });
+  .then(async (result) => {
+    const user = await User.create({ name: "Dummy", email: "email@email.com" });
+    await user.createCart();
     console.log("Tables created successfully!! ");
     app.listen(3000);
   })
