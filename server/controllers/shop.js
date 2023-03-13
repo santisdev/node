@@ -27,7 +27,8 @@ exports.getProduct = async (req, res, next) => {
 exports.getCart = async (req, res, next) => {
   try {
     const userCart = await req.user.getCart();
-    return res.json(userCart);
+    const cartProducts = await userCart.getProducts();
+    return res.json(cartProducts);
   } catch (err) {
     console.log(err);
   }
@@ -48,12 +49,18 @@ exports.getCart = async (req, res, next) => {
   // });
 };
 
-exports.postCartDeleteProduct = (req, res, next) => {
+exports.postCartDeleteProduct = async (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
-    Cart.DeleteProduct(prodId, product.price);
-    return res.json(product);
-  });
+
+  const userCart = await req.user.getCart();
+  const cartProducts = await userCart.getProducts({ where: { id: prodId } });
+  if (Object.keys(cartProducts).length > 0) {
+    const product = cartProducts[0];
+    product.cartItem.destroy();
+    return res.json({ msg: "Product deleted" });
+  } else {
+    return res.json({ msg: "No matches found" });
+  }
 };
 
 exports.postCart = async (req, res, next) => {
@@ -66,7 +73,7 @@ exports.postCart = async (req, res, next) => {
       const product = cartProducts[0];
       const oldQuantity = product.cartItem.quantity;
       newQuantity = oldQuantity + 1;
-      const addedProduct = await userCart.addProduct(product, {
+      await userCart.addProduct(product, {
         through: { quantity: newQuantity },
       });
       return res.json({ msg: "Product added" });
