@@ -12,12 +12,6 @@ exports.postAddProduct = async (req, res, next) => {
       imageUrl: imageUrl,
       description: description,
     });
-    // const product = await Product.create({
-    //   title: title,
-    //   price: price,
-    //   imageUrl: imageUrl,
-    //   description: description,
-    // });
     return res.json(product);
   } catch (err) {
     console.log(err);
@@ -27,9 +21,6 @@ exports.postAddProduct = async (req, res, next) => {
 exports.getEditProduct = async (req, res, netx) => {
   try {
     const editMode = req.query.edit;
-    // if(!editMode) {
-    // return res.send("Error")
-    // }
     const prodId = req.params.productId;
 
     // const products = await Product.findByPk(prodId);
