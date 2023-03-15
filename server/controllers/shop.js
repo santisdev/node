@@ -1,5 +1,5 @@
-const Cart = require("../models/cart");
 const CartItem = require("../models/cart-item");
+const OrderItem = require("../models/order-item");
 const Product = require("../models/product");
 const User = require("../models/user");
 
@@ -73,10 +73,10 @@ exports.postCart = async (req, res, next) => {
       const product = cartProducts[0];
       const oldQuantity = product.cartItem.quantity;
       newQuantity = oldQuantity + 1;
-      await userCart.addProduct(product, {
+      const newCartProduct = await userCart.addProduct(product, {
         through: { quantity: newQuantity },
       });
-      return res.json({ msg: "Product added" });
+      return res.json(newCartProduct);
     } else {
       const product = await Product.findByPk(prodId);
       if (product) {
@@ -100,6 +100,29 @@ exports.postCart = async (req, res, next) => {
   // res.redirect("/");
 };
 
-exports.getOrders = (req, res, next) => {};
+exports.postOrder = async (req, res, next) => {
+  try {
+    let fetchedCart;
+    const cart = await req.user.getCart();
+    fetchedCart = cart;
+    const products = await cart.getProducts();
+    const order = await req.user.createOrder();
+
+    await order.addProducts(
+      products.map((product) => {
+        product.orderItem = { quantity: product.cartItem.quantity };
+        return product;
+      })
+    );
+    await fetchedCart.setProducts(null);
+    return res.json({ msg: "Order created" });
+  } catch (error) {}
+};
+
+exports.getOrders = async (req, res, next) => {
+  const orders = await req.user.getOrders({ include: ["products"] }); //this can be done because of the relation between orders and products in server.js
+  console.log(orders);
+  return res.json(orders);
+};
 
 exports.getCheckout = (req, res, next) => {};
